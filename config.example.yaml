@@ -1,0 +1,59 @@
+{
+  "mailbox": "customersolutions@unitedcard.com.au",
+  "rules_version": "R1,R2,R3,R4a,R5,R6,R7,R8",
+  "folders": [
+    {"name": "Inbox", "queue_type": "arrival", "stale_after_days": 14},
+    {"name": "Awaiting Response", "queue_type": "chase", "stale_after_days": 14},
+    {"name": "Refunds", "queue_type": "stale", "stale_after_days": 30}
+  ],
+  "completed_folder": "Completed",
+  "completed_cache": {"path": "digests/completed_ids.json", "max_age_days": 7},
+  "account_code_regex": "\\b(?:UF|UP|UC|C0)\\d{4}\\b",
+  "categories": [
+    {"name": "payments", "match": [], "all_of": ["manual"], "any_of": ["voucher", "vouvher", "transaction"], "confidence": "High", "safe_to_draft": false, "priority": 10},
+    {"name": "account_specific", "match": ["example account"], "confidence": "Medium", "safe_to_draft": false, "priority": 20},
+    {"name": "refunds", "match": [], "applies_to_folders": ["Refunds"], "requires_account_code": true, "confidence": "High", "safe_to_draft": false, "priority": 30},
+    {"name": "refunds", "match": ["transaction report"], "confidence": "High", "safe_to_draft": false, "priority": 35},
+    {"name": "bounces", "match": ["undeliverable", "couldn't be delivered", "could not be delivered"], "confidence": "High", "safe_to_draft": false, "priority": 100},
+    {"name": "escalation", "match": ["important information", "security"], "confidence": "High", "safe_to_draft": false, "priority": 101},
+    {"name": "disputes", "match": ["dispute", "chargeback", "incorrect charge"], "confidence": "High", "safe_to_draft": false, "priority": 102},
+    {"name": "decals", "match": ["decal", "sticker"], "confidence": "High", "safe_to_draft": true, "priority": 103},
+    {"name": "portal", "match": ["portal", "access", " pin", "otp", "login", "password"], "confidence": "High", "safe_to_draft": true, "priority": 104},
+    {"name": "statements", "match": ["statement", "fuel summary", "purchase summary"], "confidence": "High", "safe_to_draft": true, "priority": 105},
+    {"name": "gift cards", "match": ["gift card", "balance"], "confidence": "High", "safe_to_draft": false, "priority": 106},
+    {"name": "fees/promo", "match": ["save on your united fuel card fees"], "confidence": "High", "safe_to_draft": false, "priority": 107},
+    {"name": "payments", "match": ["unpaid", "remittance", "voucher", "vouvher", "dishonor", "dishonour", "payment", "stop credit", "overdue"], "confidence": "High", "safe_to_draft": false, "priority": 108},
+    {"name": "applications", "match": ["application", "bulk order", "cards 4", "cards 5", "united card enquiry"], "confidence": "High", "safe_to_draft": false, "priority": 109},
+    {"name": "cancellations", "match": ["cancel", "closure"], "confidence": "High", "safe_to_draft": false, "priority": 110},
+    {"name": "POS", "match": ["receipt", " pos", "example site"], "confidence": "High", "safe_to_draft": false, "priority": 111}
+  ],
+  "human_only_categories": ["payments", "account_specific", "refunds", "bounces", "escalation", "disputes", "gift cards", "fees/promo", "applications", "cancellations", "POS"],
+  "waiting_on_rules": [
+    {"match": ["credit", "accounts"], "label": "credit team"},
+    {"match": ["support"], "label": "support queue"},
+    {"match": ["manager"], "label": "account manager"},
+    {"match": ["outlook"], "label": "bounce - corrected address needed"},
+    {"match": ["@"], "label": "customer"}
+  ],
+  "waiting_on_default": "internal/other",
+  "next_actions": {
+    "portal": "Verify account and send portal access",
+    "statements": "Pull the statement/summary and send it",
+    "decals": "Hand to the account manager with site, quantities and delivery address",
+    "disputes": "Obtain receipt evidence and pass to credit",
+    "payments": "Reconcile payment and reply with status",
+    "applications": "Verify application and route to the support queue",
+    "cancellations": "Send to the account manager for retention with reason",
+    "bounces": "Obtain a verified address and resend",
+    "gift cards": "Check card balance/order status",
+    "escalation": "Human review of external party authority",
+    "POS": "Request the receipt from site",
+    "fees/promo": "Human review of fee/promo request",
+    "refunds": "Human review of refund status",
+    "account_specific": "Read the thread - request not stated in subject"
+  },
+  "next_action_default": "Human review",
+  "llm_residue": {"enabled": false},
+  "output_dir": "digests",
+  "digest_filename_pattern": "{date}-triage"
+}

@@ -1,0 +1,9 @@
+_snapshot.json
+_run*.json
+completed_ids.json
+*.ost
+*.pst
+.osttool/
+digests/
+__pycache__/
+*.pyc
