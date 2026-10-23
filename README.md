@@ -59,6 +59,16 @@ cfg = load_config("config.yaml")
 doc = build("snapshot.json", cfg, run_at="2026-10-22T10:00:00+11:00")
 ```
 
+## Running Tests
+
+Run the standard-library test suite from the repository root:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+The tests use temporary fixture files and do not read or modify a real mailbox.
+
 ## Licence
 
 MIT - see `LICENSE`.
